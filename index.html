@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>الرفيق — رفيقك إلى الخير</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;الرفيق - رفيقك الإسلامي&quot;,&quot;short_name&quot;:&quot;الرفيق&quot;,&quot;description&quot;:&quot;تطبيق إسلامي شامل&quot;,&quot;start_url&quot;:&quot;./index.html&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#080B10&quot;,&quot;theme_color&quot;:&quot;#D4AF37&quot;,&quot;orientation&quot;:&quot;any&quot;,&quot;lang&quot;:&quot;ar&quot;,&quot;dir&quot;:&quot;rtl&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/svg+xml,&lt;svg xmlns=\&quot;http://www.w3.org/2000/svg\&quot; viewBox=\&quot;0 0 192 192\&quot;&gt;&lt;rect width=\&quot;192\&quot; height=\&quot;192\&quot; fill=\&quot;%230F5C3E\&quot; rx=\&quot;40\&quot;/&gt;&lt;text x=\&quot;96\&quot; y=\&quot;144\&quot; font-size=\&quot;120\&quot; text-anchor=\&quot;middle\&quot; fill=\&quot;%23D4AF37\&quot;&gt;🕌&lt;/text&gt;&lt;/svg&gt;&quot;,&quot;sizes&quot;:&quot;192x192&quot;,&quot;type&quot;:&quot;image/svg+xml&quot;},{&quot;src&quot;:&quot;data:image/svg+xml,&lt;svg xmlns=\&quot;http://www.w3.org/2000/svg\&quot; viewBox=\&quot;0 0 512 512\&quot;&gt;&lt;rect width=\&quot;512\&quot; height=\&quot;512\&quot; fill=\&quot;%230F5C3E\&quot; rx=\&quot;100\&quot;/&gt;&lt;text x=\&quot;256\&quot; y=\&quot;384\&quot; font-size=\&quot;320\&quot; text-anchor=\&quot;middle\&quot; fill=\&quot;%23D4AF37\&quot;&gt;🕌&lt;/text&gt;&lt;/svg&gt;&quot;,&quot;sizes&quot;:&quot;512x512&quot;,&quot;type&quot;:&quot;image/svg+xml&quot;}]}">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕌</text></svg>">
+    <style>
+        /* === الأساسيات === */
+        :root {
+            --bg: #080B10;
+            --card: rgba(255, 255, 255, 0.04);
+            --emerald: #0F5C3E;
+            --emerald-light: #1E8A5E;
+            --gold: #D4AF37;
+            --gold-soft: #E9C767;
+            --text: #F1EFE9;
+            --muted: #8892A0;
+            --border: rgba(212, 175, 55, 0.18);
+            --radius: 24px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100dvh;
+            padding-bottom: 100px;
+        }
+        .container { max-width: 460px; margin: 0 auto; padding: 0 16px 20px; }
+
+        /* === الشريط العلوي === */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 0 6px;
+        }
+        .topbar .logo {
+            font-family: 'Amiri', serif;
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: var(--gold-soft);
+        }
+        .topbar .sub {
+            font-size: 0.7rem;
+            color: var(--muted);
+            margin-top: -4px;
+        }
+        .topbar .icons {
+            display: flex;
+            gap: 14px;
+        }
+        .topbar .icons svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--muted);
+            fill: none;
+            stroke-width: 1.8;
+            cursor: pointer;
+        }
+        .topbar .icons svg:hover { stroke: var(--gold-soft); }
+
+        /* === بطاقة الموقع والتاريخ === */
+        .location-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 18px;
+            margin: 16px 0 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(12px);
+        }
+        .location-card .city {
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .location-card .city svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--gold);
+            fill: none;
+        }
+        .location-card .hijri {
+            font-size: 0.8rem;
+            color: var(--gold-soft);
+            text-align: left;
+        }
+        .location-card .hijri small {
+            color: var(--muted);
+            font-size: 0.65rem;
+            display: block;
+        }
+
+        /* === بطاقة الصلاة القادمة === */
+        .prayer-hero {
+            background: linear-gradient(145deg, var(--emerald), #0a3a28);
+            border-radius: var(--radius);
+            padding: 22px 20px;
+            margin: 12px 0 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 12px 30px rgba(15, 92, 62, 0.3);
+        }
+        .prayer-hero .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .prayer-hero .label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+        }
+        .prayer-hero .prayer-name {
+            font-family: 'Amiri', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        .prayer-hero .prayer-time {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--gold-soft);
+        }
+        .prayer-hero .countdown {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 4px 14px;
+            border-radius: 99px;
+            display: inline-block;
+            margin-top: 6px;
+        }
+        .prayer-hero .progress-wrap {
+            margin-top: 14px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+        .prayer-hero .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--gold);
+            border-radius: 99px;
+            transition: width 1s linear;
+        }
+
+        /* === شبكة الميزات (6 عناصر: قرآن، أربعون، أذكار، قبلة، مواقيت، حصن المسلم) === */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin: 16px 0;
+        }
+        .feature-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 6px;
+            text-align: center;
+            backdrop-filter: blur(8px);
+            transition: 0.2s;
+            text-decoration: none;
+            color: var(--text);
+        }
+        .feature-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--gold);
+        }
+        .feature-card .icon { font-size: 1.8rem; margin-bottom: 4px; }
+        .feature-card .title { font-weight: 700; font-size: 0.75rem; }
+        .feature-card .desc { font-size: 0.6rem; color: var(--muted); margin-top: 2px; }
+
+        /* === صف سريع (أذان) === */
+        .quick-row {
+            display: flex;
+            gap: 10px;
+            margin: 16px 0 20px;
+        }
+        .quick-row .btn {
+            flex: 1;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 12px 10px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text);
+            text-decoration: none;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .quick-row .btn:hover {
+            border-color: var(--gold);
+            color: var(--gold-soft);
+        }
+        .quick-row .btn-adhan {
+            background: linear-gradient(145deg, var(--gold), #b8962a);
+            color: #080B10;
+            border-color: var(--gold);
+        }
+        .quick-row .btn-adhan:hover {
+            transform: scale(0.97);
+            box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
+        }
+
+        /* === الشريط السفلي (5 أيقونات) === */
+        .bottom-nav {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(92vw, 420px);
+            background: rgba(8, 11, 16, 0.92);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 99px;
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+            z-index: 999;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            text-decoration: none;
+            color: var(--muted);
+            font-size: 0.55rem;
+            font-weight: 500;
+            padding: 4px 0;
+            min-width: 44px;
+            transition: 0.2s;
+        }
+        .nav-item .icon-wrap {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-item svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--muted);
+            fill: none;
+            stroke-width: 1.8;
+        }
+        .nav-item.active .icon-wrap {
+            background: linear-gradient(145deg, var(--gold), #b8962a);
+            box-shadow: 0 4px 14px rgba(212, 175, 55, 0.4);
+        }
+        .nav-item.active svg { stroke: #080B10; }
+        .nav-item.active {
+            color: var(--gold-soft);
+            font-weight: 700;
+            transform: translateY(-6px);
+        }
+        footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.6rem;
+            padding: 20px 0 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            margin-top: 20px;
+        }
+        @media (max-width: 400px) {
+            .prayer-hero .prayer-name { font-size: 1.4rem; }
+            .prayer-hero .prayer-time { font-size: 1.7rem; }
+            .feature-grid { grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+            .feature-card .title { font-size: 0.65rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- الشريط العلوي -->
+    <div class="topbar">
+        <div>
+            <div class="logo">الرَّفيق</div>
+            <div class="sub">رفيقك إلى الخير</div>
+        </div>
+        <div class="icons">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l2 2"/></svg>
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H5.78a1.65 1.65 0 0 0-1.51 1 1.65 1.65 0 0 0 .33 1.82l.04.04A10 10 0 0 0 12 18a10 10 0 0 0 6.36-2.96l.04-.04z"/></svg>
+        </div>
+    </div>
+
+    <!-- بطاقة الموقع والتاريخ -->
+    <div class="location-card">
+        <span class="city">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="3"/></svg>
+            الجزائر العاصمة
+        </span>
+        <span class="hijri" id="hijriDisplay">
+            21 ذو الحجة 1446 هـ
+            <small>27 مايو 2025 م</small>
+        </span>
+    </div>
+
+    <!-- بطاقة الصلاة القادمة -->
+    <div class="prayer-hero" id="prayerHero">
+        <div class="row">
+            <div>
+                <div class="label">الصلاة القادمة</div>
+                <div class="prayer-name" id="nextPrayerName">المغرب</div>
+            </div>
+            <div class="prayer-time" id="nextPrayerTime">19:42</div>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+            <span class="label">باقي على الصلاة</span>
+            <span class="countdown" id="countdownDisplay">01:12:45</span>
+        </div>
+        <div class="progress-wrap">
+            <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+        </div>
+    </div>
+
+    <!-- شبكة الميزات الرئيسية (6 صفحات) -->
+    <div class="feature-grid">
+        <a href="./quran.html" class="feature-card">
+            <div class="icon">📖</div>
+            <div class="title">القرآن</div>
+            <div class="desc">114 سورة</div>
+        </a>
+        <a href="./arbaeen.html" class="feature-card">
+            <div class="icon">📚</div>
+            <div class="title">الأربعون</div>
+            <div class="desc">42 حديثاً</div>
+        </a>
+        <a href="./azkar.html" class="feature-card">
+            <div class="icon">🌅</div>
+            <div class="title">الأذكار</div>
+            <div class="desc">صباح ومساء</div>
+        </a>
+        <a href="./qibla.html" class="feature-card">
+            <div class="icon">🧭</div>
+            <div class="title">القبلة</div>
+            <div class="desc">بوصلة</div>
+        </a>
+        <a href="./prayer.html" class="feature-card">
+            <div class="icon">📅</div>
+            <div class="title">المواقيت</div>
+            <div class="desc">أوقات الصلاة</div>
+        </a>
+        <a href="./hisnul.html" class="feature-card">
+            <div class="icon">🤲</div>
+            <div class="title">حصن المسلم</div>
+            <div class="desc">30 دعاءً</div>
+        </a>
+    </div>
+
+    <!-- صف سريع: زر الأذان -->
+    <div class="quick-row">
+        <button class="btn btn-adhan" id="adhanQuickBtn">
+            🔊 تشغيل الأذان
+        </button>
+    </div>
+
+    <footer>الرفيق — رفيقك إلى الخير</footer>
+</div>
+
+<!-- ===== الشريط السفلي (5 أيقونات) ===== -->
+<nav class="bottom-nav">
+    <a href="./index.html" class="nav-item active">
+        <span class="icon-wrap"><svg viewBox="0 0 24 24"><path d="M3 12l9-8 9 8"/><path d="M5 12v8h14v-8"/></svg></span>
+        <span>الرئيسية</span>
+    </a>
+    <a href="./quran.html" class="nav-item">
+        <span class="icon-wrap"><svg viewBox="0 0 24 24"><path d="M4 6h16v14H4z"/><path d="M8 6V4h8v2"/></svg></span>
+        <span>القرآن</span>
+    </a>
+    <a href="./azkar.html" class="nav-item">
+        <span class="icon-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M6 20c0-4 2.5-6 6-6s6 2 6 6"/></svg></span>
+        <span>الأذكار</span>
+    </a>
+    <a href="./prayer.html" class="nav-item">
+        <span class="icon-wrap"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg></span>
+        <span>المواقيت</span>
+    </a>
+    <a href="./qibla.html" class="nav-item">
+        <span class="icon-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16,8 12,12 8,16 12,12"/></svg></span>
+        <span>القبلة</span>
+    </a>
+</nav>
+
+<!-- ===== الصوت والأذان ===== -->
+<audio id="adhanAudio" src="./audio/adhan.mp3" preload="none"></audio>
+
+<script>
+    // 1. تشغيل الأذان السريع
+    document.getElementById('adhanQuickBtn').addEventListener('click', function() {
+        const audio = document.getElementById('adhanAudio');
+        audio.currentTime = 0;
+        audio.play().catch(() => {
+            // إذا تعذر التشغيل (مثلاً الملف غير موجود)، ننقل المستخدم لصفحة المواقيت حيث الإعدادات الكاملة
+            window.location.href = './prayer.html';
+        });
+    });
+
+    // 2. جلب مواقيت الصلاة وعرضها في البطاقة (عداد تنازلي + تاريخ)
+    async function fetchPrayers() {
+        try {
+            const res = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Algiers&country=Algeria&method=19');
+            const json = await res.json();
+            if (json.code !== 200) throw new Error('API error');
+            return json.data;
+        } catch {
+            // بيانات افتراضية في حال تعذر الاتصال
+            return {
+                timings: { Fajr: '05:00', Sunrise: '06:30', Dhuhr: '13:00', Asr: '16:30', Maghrib: '19:42', Isha: '21:15' },
+                date: { hijri: { day: 21, month: { ar: 'ذو الحجة' }, year: 1446 }, gregorian: { day: 27, month: { en: 'مايو' }, year: 2025 } }
+            };
+        }
+    }
+
+    function toMinutes(s) {
+        const [h, m] = s.split(':').map(Number);
+        return h * 60 + m;
+    }
+
+    async function updateUI() {
+        const data = await fetchPrayers();
+        const t = data.timings;
+        const hijri = data.date.hijri;
+        const greg = data.date.gregorian;
+
+        // تحديث التاريخ
+        document.getElementById('hijriDisplay').innerHTML = `
+            ${hijri.day} ${hijri.month.ar} ${hijri.year} هـ
+            <small>${greg.day} ${greg.month.en} ${greg.year} م</small>
+        `;
+
+        const prayerKeys = ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+        const prayerNames = ['الفجر', 'الشروق', 'الظهر', 'العصر', 'المغرب', 'العشاء'];
+        const now = new Date();
+        const nowMin = now.getHours() * 60 + now.getMinutes();
+
+        let nextIndex = -1;
+        for (let i = 0; i < prayerKeys.length; i++) {
+            if (prayerKeys[i] === 'Sunrise') continue;
+            if (toMinutes(t[prayerKeys[i]]) > nowMin) { nextIndex = i; break; }
+        }
+        if (nextIndex === -1) nextIndex = 0; // الفجر غداً
+
+        const nextKey = prayerKeys[nextIndex];
+        const nextName = prayerNames[nextIndex];
+        const nextTime = t[nextKey];
+        const nextMin = toMinutes(nextTime);
+        let prevMin;
+        if (nextIndex === 0) prevMin = toMinutes(t.Isha) - 1440;
+        else prevMin = toMinutes(t[prayerKeys[nextIndex - 1]]);
+
+        document.getElementById('nextPrayerName').textContent = nextName;
+        document.getElementById('nextPrayerTime').textContent = nextTime;
+
+        function tick() {
+            const n = new Date();
+            const nowSec = n.getHours() * 3600 + n.getMinutes() * 60 + n.getSeconds();
+            let diff = nextMin * 60 - nowSec;
+            if (diff < 0) diff += 24 * 3600;
+            const h = Math.floor(diff / 3600);
+            const m = Math.floor((diff % 3600) / 60);
+            const s = diff % 60;
+            document.getElementById('countdownDisplay').textContent =
+                `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+
+            const total = (nextMin - prevMin) * 60;
+            const elapsed = total - diff;
+            let progress = 0;
+            if (total > 0) progress = Math.max(0, Math.min(1, elapsed / total));
+            document.getElementById('progressFill').style.width = (progress * 100) + '%';
+        }
+        tick();
+        setInterval(tick, 1000);
+    }
+
+    updateUI();
+
+    // تسجيل Service Worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+</script>
+
+</body>
+</html>
