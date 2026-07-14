@@ -151,4 +151,169 @@ footer {
   .topbar {
     padding: 10px 0;
   }
+}/* ===== أنماط الصفحة الرئيسية الجديدة (الرفيق) ===== */
+.phone-frame {
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
+    background: linear-gradient(145deg, #0f3b22, #062012);
+    border-radius: 40px;
+    padding: 24px 20px 10px 20px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.7);
+    color: #fff;
+    font-family: 'Tajawal', sans-serif;
 }
+.phone-frame .app-title {
+    font-size: 28px;
+    font-weight: 900;
+    text-align: center;
+    letter-spacing: 2px;
+}
+.phone-frame .app-sub {
+    text-align: center;
+    font-size: 14px;
+    color: #a3d8b0;
+    margin-top: -2px;
+    margin-bottom: 12px;
+}
+.phone-frame .location-date {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #b6e0c4;
+    background: rgba(255,255,255,0.08);
+    padding: 8px 16px;
+    border-radius: 30px;
+    margin-bottom: 20px;
+}
+.phone-frame .prayer-card {
+    background: #ffffff;
+    border-radius: 30px;
+    padding: 20px;
+    color: #1e3b2a;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    display: block;
+    text-decoration: none;
+}
+.phone-frame .prayer-label {
+    font-size: 16px;
+    font-weight: 700;
+    color: #4a7c5f;
+}
+.phone-frame .prayer-name {
+    font-size: 48px;
+    font-weight: 900;
+    color: #0f3b22;
+    line-height: 1.1;
+}
+.phone-frame .prayer-time {
+    font-size: 36px;
+    font-weight: 900;
+    color: #0f3b22;
+    letter-spacing: 3px;
+}
+.phone-frame .prayer-remaining {
+    background: #eef6f1;
+    border-radius: 50px;
+    padding: 8px 16px;
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e5a37;
+}
+.phone-frame .prayer-remaining span {
+    background: #0f3b22;
+    color: #fff;
+    padding: 2px 12px;
+    border-radius: 30px;
+    margin-right: 6px;
+}
+.phone-frame .adhan-btn {
+    background: #1e5a37;
+    color: #fff;
+    padding: 12px;
+    border-radius: 60px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 0 #0a2e1a;
+    display: block;
+    text-decoration: none;
+}
+.phone-frame .adhan-btn small {
+    font-weight: 400;
+    font-size: 14px;
+    color: #b6e0c4;
+    display: block;
+}
+.phone-frame .features-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+.phone-frame .feature-item {
+    background: rgba(255,255,255,0.07);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 16px 8px;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    display: block;
+}
+.phone-frame .feature-item .title {
+    font-weight: 900;
+    font-size: 16px;
+    color: #fff;
+}
+.phone-frame .feature-item .desc {
+    font-size: 12px;
+    color: #a3d8b0;
+    margin-top: 4px;
+}
+.phone-frame .quick-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+.phone-frame .quick-tab {
+    background: rgba(255,255,255,0.05);
+    border-radius: 30px;
+    padding: 8px 4px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #cbe8d5;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.phone-frame .bottom-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    gap: 4px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 60px;
+    padding: 8px 6px;
+    margin-top: 8px;
+}
+.phone-frame .nav-item {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #8cb89a;
+    padding: 6px 0;
+    border-radius: 40px;
+    text-decoration: none;
+    display: block;
+}
+.phone-frame .nav-item.active {
+    background: #1e5a37;
+    color: #fff;
+}
+/* انتهاء أنماط الصفحة الرئيسية */
