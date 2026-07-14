@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حصن المسلم — الرفيق</title>
+<link rel="stylesheet" href="./style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤲</text></svg>">
+<style>
+  .container{max-width:720px;margin:0 auto;padding:16px;}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 0;}
+  .back{color:var(--gold);text-decoration:none;font-size:14px;font-weight:600;}
+  h1{text-align:center;font-size:26px;color:var(--gold-soft);margin:6px 0 2px;}
+  .sub{text-align:center;color:var(--muted);font-size:13px;margin-bottom:6px;}
+
+  .search-box{position:relative;margin-bottom:16px;}
+  .search-box input{width:100%;padding:13px 44px 13px 16px;border-radius:14px;border:1px solid var(--border);
+    background:var(--card);backdrop-filter:blur(12px);font-size:15px;font-family:inherit;color:var(--text);}
+  .search-box input:focus{outline:2px solid var(--gold);}
+  .search-box .ic{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted);}
+  .result-count{font-size:13px;color:var(--muted);margin-bottom:14px;}
+
+  .dua-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);
+    padding:18px 20px;margin-bottom:14px;backdrop-filter:blur(8px);transition:0.2s;}
+  .dua-card:hover{border-color:var(--gold);}
+  .dua-card .category{font-size:12px;color:var(--gold);font-weight:700;text-transform:uppercase;margin-bottom:6px;}
+  .dua-card .text{font-family:'Amiri',serif;font-size:19px;line-height:2;color:var(--text);margin-bottom:10px;}
+  .dua-card .meta{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+  .dua-card .source{font-size:13px;color:var(--muted);}
+  .dua-card .source .grade{background:rgba(255,255,255,0.06);padding:2px 10px;border-radius:99px;font-size:11px;font-weight:700;color:var(--gold-soft);}
+  .dua-card .fav-btn{background:none;border:none;font-size:22px;cursor:pointer;transition:0.2s;padding:4px 8px;border-radius:50%;line-height:1;}
+  .dua-card .fav-btn:hover{transform:scale(1.2);}
+  .dua-card .fav-btn.active{color:var(--gold);text-shadow:0 0 12px rgba(212,175,55,0.3);}
+
+  .filter-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+  .filter-tabs .tab{padding:6px 14px;border-radius:99px;background:var(--card);border:1px solid var(--border);
+    font-size:13px;cursor:pointer;transition:0.2s;font-weight:500;color:var(--muted);backdrop-filter:blur(4px);}
+  .filter-tabs .tab.active{background:var(--gold);color:#080B10;border-color:var(--gold);font-weight:700;}
+  .filter-tabs .tab:hover:not(.active){border-color:var(--gold);}
+
+  .stats{display:flex;gap:20px;justify-content:center;margin:12px 0 18px;font-size:14px;color:var(--muted);}
+  .stats span{background:var(--card);padding:6px 16px;border-radius:99px;border:1px solid var(--border);backdrop-filter:blur(4px);}
+  .stats .num{font-weight:800;color:var(--gold-soft);}
+
+  #status{text-align:center;color:var(--muted);padding:40px 0;}
+  footer{text-align:center;padding:24px 0 10px;color:var(--muted);font-size:12px;border-top:1px solid var(--border);margin-top:20px;}
+  @media (max-width:600px){.dua-card .text{font-size:17px;}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="topbar">
+    <a class="back" href="./index.html">→ الرئيسية</a>
+    <span style="font-size:22px;">🤲</span>
+  </div>
+  <h1>حصن المسلم</h1>
+  <p class="sub">أدعية وأذكار يومية — 30 دعاءً</p>
+
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="ابحث في الأدعية أو المصادر...">
+    <span class="ic">🔍</span>
+  </div>
+  <div class="result-count" id="resultCount"></div>
+
+  <div class="filter-tabs" id="filterTabs">
+    <button class="tab active" data-filter="all">الكل</button>
+    <button class="tab" data-filter="المفضلة">⭐ المفضلة</button>
+  </div>
+
+  <div class="stats">
+    <span>📚 <span class="num" id="totalCount">0</span></span>
+    <span>⭐ <span class="num" id="favCount">0</span></span>
+  </div>
+
+  <div id="duaList"></div>
+  <footer>الرفيق — حصن المسلم، تحصينك اليومي</footer>
+</div>
+
+<script>
+const HISNUL_DATA = [
+  {id:1,category:"الاستيقاظ من النوم",text:"الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ",source:"رواه البخاري",grade:"صحيح"},
+  {id:2,category:"دخول الخلاء",text:"اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْخُبْثِ وَالْخَبَائِثِ",source:"رواه البخاري ومسلم",grade:"صحيح"},
+  {id:3,category:"الخروج من الخلاء",text:"غُفْرَانَكَ",source:"رواه الترمذي",grade:"حسن"},
+  {id:4,category:"الوضوء",text:"سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ، أَشْهَدُ أَن لا إِلَهَ إِلاَّ أَنْتَ، أَسْتَغْفِرُكَ وَأَتُوبُ إِلَيْكَ",source:"رواه مسلم",grade:"صحيح"},
+  {id:5,category:"بعد الوضوء",text:"اللَّهُمَّ اجْعَلْنِي مِنَ التَّوَّابِينَ وَاجْعَلْنِي مِنَ الْمُتَطَهِّرِينَ",source:"رواه الترمذي",grade:"حسن"},
+  {id:6,category:"الذهاب إلى المسجد",text:"اللَّهُمَّ اجْعَل فِي قَلْبِي نُوراً، وَفِي لِسَانِي نُوراً، وَاجْعَل فِي سَمْعِي نُوراً، وَاجْعَل فِي بَصَرِي نُوراً",source:"رواه مسلم",grade:"صحيح"},
+  {id:7,category:"في المسجد",text:"بِسْمِ اللَّهِ وَالسَّلاَمُ عَلَى رَسُولِ اللَّهِ، اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ",source:"رواه مسلم",grade:"صحيح"},
+  {id:8,category:"بعد السلام من الصلاة",text:"اللَّهُمَّ أَنْتَ السَّلاَمُ وَمِنْكَ السَّلاَمُ، تَبَارَكْتَ يَا ذَا الْجَلاَلِ وَالإِكْرَامِ",source:"رواه مسلم",grade:"صحيح"},
+  {id:9,category:"في الطريق",text:"أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِن شَرِّ مَا خَلَقَ",source:"رواه مسلم",grade:"صحيح"},
+  {id:10,category:"عند الخوف",text:"لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",source:"رواه الترمذي",grade:"حسن"},
+  {id:11,category:"عند الحزن",text:"لا إِلَهَ إِلاَّ اللَّهُ الْعَظِيمُ الْحَلِيمُ، لا إِلَهَ إِلاَّ اللَّهُ رَبُّ الْعَرْشِ الْعَظِيمِ",source:"رواه البخاري",grade:"صحيح"},
+  {id:12,category:"عند الغضب",text:"أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ",source:"رواه البخاري",grade:"صحيح"},
+  {id:13,category:"عند المرض",text:"بِسْمِ اللَّهِ ثَلاَثاً، وَقُلْ سَبْعَ مَرَّاتٍ: أَعُوذُ بِاللَّهِ وَقُدْرَتِهِ مِن شَرِّ مَا أَجِدُ وَأُحَاذِرُ",source:"رواه مسلم",grade:"صحيح"},
+  {id:14,category:"زيارة المريض",text:"لا بَأْسَ طَهُورٌ إِن شَاءَ اللَّهُ",source:"رواه البخاري ومسلم",grade:"صحيح"},
+  {id:15,category:"عند العطس",text:"الْحَمْدُ لِلَّهِ عَلَى كُلِّ حَالٍ",source:"رواه مسلم",grade:"صحيح"},
+  {id:16,category:"الرد على العاطس",text:"يَرْحَمُكَ اللَّهُ",source:"رواه البخاري ومسلم",grade:"صحيح"},
+  {id:17,category:"عند سماع الرعد",text:"سُبْحَانَ الَّذِي يُسَبِّحُ الرَّعْدُ بِحَمْدِهِ وَالْمَلاَئِكَةُ مِن خِيفَتِهِ",source:"رواه البخاري",grade:"صحيح"},
+  {id:18,category:"عند رؤية الهلال",text:"اللَّهُ أَكْبَرُ، اللَّهُمَّ أَهِلَّهُ عَلَيْنَا بِالأَمْنِ وَالإِيمَانِ، وَالسَّلاَمَةِ وَالإِسْلاَمِ",source:"رواه الترمذي",grade:"حسن"},
+  {id:19,category:"عند الإفطار",text:"ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الأَجْرُ إِن شَاءَ اللَّهُ",source:"رواه أبو داود",grade:"حسن"},
+  {id:20,category:"عند الشرب",text:"الْحَمْدُ لِلَّهِ الَّذِي سَقَانَا عَذْباً فُرَاتاً",source:"رواه الترمذي",grade:"حسن"},
+  {id:21,category:"دخول المنزل",text:"بِسْمِ اللَّهِ وَلَجْنَا وَبِسْمِ اللَّهِ خَرَجْنَا وَعَلَى اللَّهِ رَبِّنَا تَوَكَّلْنَا",source:"رواه أبو داود والترمذي",grade:"حسن"},
+  {id:22,category:"قبل النوم",text:"اللَّهُمَّ إِنِّي أَسْلَمْتُ وَجْهِي إِلَيْكَ، وَفَوَّضْتُ أَمْرِي إِلَيْكَ، وَوَلَّيْتُ ظَهْرِي إِلَيْكَ",source:"رواه البخاري ومسلم",grade:"صحيح"},
+  {id:23,category:"الاستيقاظ من الكابوس",text:"أَعُوذُ بِاللَّهِ مِنْهَا وَمِن شَرِّ رُؤْيَا السُّوءِ",source:"رواه البخاري",grade:"صحيح"},
+  {id:24,category:"عند رؤية الحسن",text:"الْحَمْدُ لِلَّهِ الَّذِي بِنِعْمَتِهِ تَتِمُّ الصَّالِحَاتُ",source:"رواه الترمذي",grade:"حسن"},
+  {id:25,category:"عند رؤية القبيح",text:"الْحَمْدُ لِلَّهِ عَلَى كُلِّ حَالٍ",source:"رواه مسلم",grade:"صحيح"},
+  {id:26,category:"عند دخول السوق",text:"لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ يُحْيِي وَيُمِيتُ وَهُوَ حَيٌّ لا يَمُوتُ",source:"رواه الترمذي",grade:"حسن"},
+  {id:27,category:"عند الضيق",text:"يَا حَيُّ يَا قَيُّومُ برحمتك أستغيث",source:"رواه الترمذي",grade:"حسن"},
+  {id:28,category:"عند الفرح",text:"الْحَمْدُ لِلَّهِ كَثِيراً وَالشُّكْرُ لِلَّهِ كَثِيراً عَلَى كُلِّ حَالٍ",source:"رواه مسلم",grade:"صحيح"},
+  {id:29,category:"دعاء للغير",text:"اللَّهُمَّ اغْفِرْ لَهُ وَارْحَمْهُ وَعَافِهِ وَاعْفُ عَنْهُ",source:"رواه مسلم",grade:"صحيح"},
+  {id:30,category:"دعاء للميت",text:"اللَّهُمَّ اغْفِرْ لَهُ وَارْحَمْهُ وَعَافِهِ وَاعْفُ عَنْهُ وَأَكْرِمْ نُزُلَهُ وَوَسِّعْ مَدْخَلَهُ",source:"رواه مسلم",grade:"صحيح"}
+];
+
+let filteredData = [...HISNUL_DATA];
+let favorites = JSON.parse(localStorage.getItem('hisnul_favorites') || '[]');
+let currentFilter = 'all';
+
+const listEl = document.getElementById('duaList');
+const searchInput = document.getElementById('searchInput');
+const resultCountEl = document.getElementById('resultCount');
+const totalCountEl = document.getElementById('totalCount');
+const favCountEl = document.getElementById('favCount');
+const filterTabsEl = document.getElementById('filterTabs');
+
+function saveFavorites(){
+  localStorage.setItem('hisnul_favorites', JSON.stringify(favorites));
+  updateStats();
+}
+
+function toggleFavorite(id){
+  const idx = favorites.indexOf(id);
+  if(idx > -1) favorites.splice(idx, 1);
+  else favorites.push(id);
+  saveFavorites();
+  renderList();
+}
+
+function updateStats(){
+  totalCountEl.textContent = HISNUL_DATA.length;
+  favCountEl.textContent = favorites.length;
+}
+
+function getCategories(){
+  const cats = new Set();
+  HISNUL_DATA.forEach(d => cats.add(d.category));
+  return Array.from(cats).sort();
+}
+
+function buildFilterTabs(){
+  const categories = getCategories();
+  let html = `<button class="tab active" data-filter="all">الكل</button>
+              <button class="tab" data-filter="المفضلة">⭐ المفضلة</button>`;
+  categories.forEach(cat => {
+    html += `<button class="tab" data-filter="${cat}">${cat}</button>`;
+  });
+  filterTabsEl.innerHTML = html;
+  filterTabsEl.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', function(){
+      filterTabsEl.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      currentFilter = this.dataset.filter;
+      applyFiltersAndSearch();
+    });
+  });
+}
+
+function applyFiltersAndSearch(){
+  const query = searchInput.value.trim().toLowerCase();
+  let result = [...HISNUL_DATA];
+  if(currentFilter === 'المفضلة') result = result.filter(d => favorites.includes(d.id));
+  else if(currentFilter !== 'all') result = result.filter(d => d.category === currentFilter);
+  if(query){
+    result = result.filter(d =>
+      d.text.includes(query) ||
+      d.source.includes(query) ||
+      d.category.includes(query) ||
+      d.grade.includes(query)
+    );
+  }
+  filteredData = result;
+  renderList();
+}
+
+function renderList(){
+  if(filteredData.length === 0){
+    listEl.innerHTML = `<p style="text-align:center;color:var(--muted);padding:40px 0;">لا توجد أدعية تطابق البحث</p>`;
+    resultCountEl.textContent = '0 نتيجة';
+    return;
+  }
+  let html = '';
+  filteredData.forEach(d => {
+    const isFav = favorites.includes(d.id);
+    html += `
+      <div class="dua-card" data-id="${d.id}">
+        <div class="category">📂 ${d.category}</div>
+        <div class="text">${d.text}</div>
+        <div class="meta">
+          <span class="source">${d.source} <span class="grade">${d.grade}</span></span>
+          <button class="fav-btn ${isFav ? 'active' : ''}" data-id="${d.id}">${isFav ? '⭐' : '☆'}</button>
+        </div>
+      </div>
+    `;
+  });
+  listEl.innerHTML = html;
+  resultCountEl.textContent = `${filteredData.length} من ${HISNUL_DATA.length} دعاء`;
+  listEl.querySelectorAll('.fav-btn').forEach(btn => {
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      const id = parseInt(this.dataset.id, 10);
+      toggleFavorite(id);
+    });
+  });
+}
+
+searchInput.addEventListener('input', applyFiltersAndSearch);
+buildFilterTabs();
+updateStats();
+renderList();
+</script>
+</body>
+</html>
