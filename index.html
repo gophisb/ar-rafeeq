@@ -59,8 +59,8 @@
         </div>
     </div>
     <audio id="adhanAudio" preload="none">
-        <source src="data:audio/mp3;base64,SUQzBAAAAAABE1RZWFgAAAAtAAADY29tbWVudABCaWcgTXVzaWMgTmV0d29yaywgTWVkaWEgVHJhbnNjb2RlcgAAAGkAVElUMgAAACAAQWRoYW4gKFJlY2l0YXRpb24pIC0gTWFrYWggKE1lY2NhKQBBTFRJAQAAACgAAABBZGhvbiAoUmVjaX
-        (هذا جزء تمثيلي فقط، يُستبدل بالملف الصوتي الكامل base64 عند الحاجة)">
+        <!-- ضع هنا base64 لملف الأذان الصوتي الحقيقي -->
+        <source src="data:audio/mp3;base64,SUQzBAAAAAABE1RZWFgAAAAtAAADY29tbWVudABCaWcgTXVzaWMgTmV0d29yaywgTWVkaWEgVHJhbnNjb2RlcgAAAGkAVElUMgAAACAAQWRoYW4gKFJlY2l0YXRpb24pIC0gTWFrYWggKE1lY2NhKQBBTFRJAQAAACgAAABBZGhvbiAoUmVjaX" type="audio/mp3">
     </audio>
     <div class="bottomnav"><div class="bottomnav-inner">
         <a href="./azkar.html" class="navitem"><div class="ic"><i data-lucide="heart"></i></div><span>الأذكار</span></a>
@@ -158,8 +158,21 @@
             Logger.log('✅ Rafeeq 10/10 loaded');
         })();
     </script>
+    <!-- استدعاء الأيقونات بعد تحميل DOM بالكامل -->
     <script>
-        lucide.createIcons();
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            } else {
+                console.warn('Lucide library not loaded');
+            }
+        });
+        // احتياطًا بعد وقت قصير
+        setTimeout(function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }, 500);
     </script>
 </body>
 </html>
