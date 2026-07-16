@@ -58,10 +58,8 @@
             <a href="./azkar.html" class="quick"><i data-lucide="heart"></i><span>الأذكار</span></a>
         </div>
     </div>
-    <audio id="adhanAudio" preload="none">
-        <!-- ضع هنا base64 لملف الأذان الصوتي الحقيقي -->
-        <source src="data:audio/mp3;base64,SUQzBAAAAAABE1RZWFgAAAAtAAADY29tbWVudABCaWcgTXVzaWMgTmV0d29yaywgTWVkaWEgVHJhbnNjb2RlcgAAAGkAVElUMgAAACAAQWRoYW4gKFJlY2l0YXRpb24pIC0gTWFrYWggKE1lY2NhKQBBTFRJAQAAACgAAABBZGhvbiAoUmVjaX" type="audio/mp3">
-    </audio>
+    <!-- 🔊 استعادة مسار ملف الأذان الأصلي -->
+    <audio id="adhanAudio" src="./audio/adhan.mp3" preload="auto"></audio>
     <div class="bottomnav"><div class="bottomnav-inner">
         <a href="./azkar.html" class="navitem"><div class="ic"><i data-lucide="heart"></i></div><span>الأذكار</span></a>
         <a href="./arbaeen.html" class="navitem"><div class="ic"><i data-lucide="book-text"></i></div><span>الحديث</span></a>
@@ -100,15 +98,40 @@
             const Comm = { KEYS:{ CITY:'city',COUNTRY:'country',ADHAN_PLAYED:'adhan_played',LAST_UPDATE:'last_update' }, setCity(c,co){ Storage.set(Comm.KEYS.CITY,c); if(co) Storage.set(Comm.KEYS.COUNTRY,co); Storage.set(Comm.KEYS.LAST_UPDATE,Date.now()); State.set('settings.city',c); if(co) State.set('settings.country',co); State.save() }, getCity(){ return Storage.get(Comm.KEYS.CITY,CONFIG.DEFAULT_CITY) }, getCountry(){ return Storage.get(Comm.KEYS.COUNTRY,CONFIG.DEFAULT_COUNTRY) }, setAdhanPlayed(pk){ Storage.set(Comm.KEYS.ADHAN_PLAYED+'_'+pk,Date.now()) }, isAdhanPlayed(pk){ const v=Storage.get(Comm.KEYS.ADHAN_PLAYED+'_'+pk,0); return (Date.now()-v)<6e5 }, clearAdhanPlayed(pk){ Storage.remove(Comm.KEYS.ADHAN_PLAYED+'_'+pk) } };
             const Logger = { _enabled:true, log(...a){ if(this._enabled) console.log('[الرفيق]',...a) }, warn(...a){ if(this._enabled) console.warn('[الرفيق ⚠️]',...a) }, error(...a){ if(this._enabled) console.error('[الرفيق ❌]',...a) } };
 
+            // ✅ تم إصلاح Loc ليعمل فوراً عند تغيير القائمة
             const Loc = {
-                _cityChangedTimeout:null,
-                init(){ const city=Comm.getCity(); const found=WILAYAS.find(w=>w.city===city); this._currentWilaya=found?found.n:16; this._populateSelect(); this._listenToCityChange() },
-                _currentWilaya:16,
-                _populateSelect(){ const sel=document.getElementById('citySelect'); if(!sel) return; sel.innerHTML=''; WILAYAS.forEach(w=>{ const o=document.createElement('option'); o.value=w.n; o.textContent='📍 '+w.name; sel.appendChild(o) }); sel.value=this._currentWilaya; sel.addEventListener('change',()=>{ this._currentWilaya=parseInt(sel.value,10); this._handleCityChange() }) },
-                _handleCityChange(){ if(this._cityChangedTimeout) clearTimeout(this._cityChangedTimeout); this._cityChangedTimeout=setTimeout(()=>{ const w=this.getCurrentWilayaData(); if(w){ Comm.setCity(w.city); window.dispatchEvent(new CustomEvent('cityChanged',{detail:{wilaya:this._currentWilaya}})) } },300) },
-                _listenToCityChange(){ window.addEventListener('storage',e=>{ if(e.key===Storage._key(Comm.KEYS.CITY)&&e.newValue){ const f=WILAYAS.find(w=>w.city===JSON.parse(e.newValue)); if(f&&f.n!==this._currentWilaya){ this._currentWilaya=f.n; const sel=document.getElementById('citySelect'); if(sel) sel.value=f.n; window.dispatchEvent(new CustomEvent('cityChanged',{detail:{wilaya:f.n}})) } } }) },
-                getCurrentWilayaData(){ return WILAYAS.find(w=>w.n===this._currentWilaya) },
-                getCurrentCity(){ const w=this.getCurrentWilayaData(); return w?w.city:CONFIG.DEFAULT_CITY }
+                init(){
+                    const city = Comm.getCity();
+                    const found = WILAYAS.find(w => w.city === city);
+                    this._currentWilaya = found ? found.n : 16;
+                    this._populateSelect();
+                },
+                _currentWilaya: 16,
+                _populateSelect(){
+                    const sel = document.getElementById('citySelect');
+                    if(!sel) return;
+                    sel.innerHTML = '';
+                    WILAYAS.forEach(w => {
+                        const o = document.createElement('option');
+                        o.value = w.n;
+                        o.textContent = '📍 ' + w.name;
+                        sel.appendChild(o);
+                    });
+                    sel.value = this._currentWilaya;
+                    sel.addEventListener('change', () => {
+                        const newVal = parseInt(sel.value, 10);
+                        if (newVal === this._currentWilaya) return;
+                        this._currentWilaya = newVal;
+                        const w = this.getCurrentWilayaData();
+                        if (w) {
+                            Comm.setCity(w.city);
+                            State.set('settings.city', w.city, true);
+                            window.dispatchEvent(new CustomEvent('cityChanged', { detail: { wilaya: newVal } }));
+                        }
+                    });
+                },
+                getCurrentWilayaData(){ return WILAYAS.find(w => w.n === this._currentWilaya); },
+                getCurrentCity(){ const w = this.getCurrentWilayaData(); return w ? w.city : CONFIG.DEFAULT_CITY; }
             };
 
             const PE = {
@@ -124,15 +147,67 @@
             const CE = { getRemainingSeconds(nm,pm){ const now=new Date(); const ns=now.getHours()*3600+now.getMinutes()*60+now.getSeconds(); let d=nm*60-ns; if(d<0) d+=86400; return d }, getProgress(nm,pm){ const d=this.getRemainingSeconds(nm,pm); const t=(nm-pm)*60; if(t<=0) return 0; return Math.max(0,Math.min(1,(t-d)/t)) }, formatCountdown(s){ const h=String(Math.floor(s/3600)).padStart(2,'0'); const m=String(Math.floor((s%3600)/60)).padStart(2,'0'); const sec=String(s%60).padStart(2,'0'); return h+':'+m+':'+sec } };
             const HiE = { getMoodNote(hd){ if(!hd) return ''; const mn=parseInt(hd.month.number,10); const d=parseInt(hd.day,10); if(mn===9) return '🌙 رمضان مبارك'; if(mn===10&&d===1) return '🎉 عيد فطر مبارك'; if(mn===12&&d===10) return '🐏 عيد أضحى مبارك'; if(mn===12&&d===9) return '🤲 يوم عرفة المبارك'; const today=new Date(); if(today.getDay()===5) return '🕌 جمعة مباركة'; return '' }, formatHijri(hd){ if(!hd) return '📅 —'; return '📅 '+hd.day+' '+hd.month.ar+' '+hd.year+' هـ' } };
 
+            // ✅ الأذان مُصلح: نافذة 60 ثانية + فحص فوري بعد التحميل
             const AE = {
                 _audio:null,_isPlaying:false,_lastAutoAdhanTime:0,
-                init(){ this._audio=document.getElementById('adhanAudio'); if(!this._audio) return; this._setupControls(); if('Notification' in window&&Notification.permission==='default') Notification.requestPermission() },
-                _setupControls(){ const btn=document.getElementById('adhanPlayBtn'); if(!btn) return; btn.addEventListener('click',()=>{ this._isPlaying?this.pause():this.play() }); this._audio.addEventListener('ended',()=>{ this._isPlaying=false; this._updateUI(false); State.set('adhan.isPlaying',false) }) },
-                play(){ if(!this._audio) return; this._audio.currentTime=0; this._audio.play().then(()=>{ this._isPlaying=true; this._updateUI(true); State.set('adhan.isPlaying',true) }).catch(()=>{}) },
-                pause(){ if(!this._audio) return; this._audio.pause(); this._isPlaying=false; this._updateUI(false); State.set('adhan.isPlaying',false) },
-                _updateUI(p){ const pi=document.getElementById('playIcon'),pai=document.getElementById('pauseIcon'); if(pi&&pai){ pi.style.display=p?'none':'block'; pai.style.display=p?'block':'none' } },
-                triggerAutoAdhan(pn,pk){ const now=Date.now(); if(now-this._lastAutoAdhanTime<30000||Comm.isAdhanPlayed(pk)) return; this._lastAutoAdhanTime=now; this.play(); Comm.setAdhanPlayed(pk); if('Notification' in window&&Notification.permission==='granted'){ new Notification('🔊 وقت صلاة '+pn,{body:'الرفيق يذكرك بالصلاة',icon:'🕌'}) } if(navigator.vibrate) navigator.vibrate([200,100,200,100,300]) },
-                checkTime(){ const p=State.get().prayer; if(!p.timings||!p.nextPrayerKey) return; const now=new Date(); const ns=now.getHours()*3600+now.getMinutes()*60+now.getSeconds(); for(let i=0;i<CONFIG.PRAYER_KEYS.length;i++){ const k=CONFIG.PRAYER_KEYS[i]; if(k==='Sunrise') continue; const pt=p.timings[k]; if(!pt) continue; const[h,m]=pt.split(':').map(Number); const ps=h*3600+m*60; if(Math.abs(ns-ps)<30&&!Comm.isAdhanPlayed(k)){ this.triggerAutoAdhan(CONFIG.PRAYER_NAMES[i],k); break } } }
+                init(){
+                    this._audio = document.getElementById('adhanAudio');
+                    if(!this._audio) return;
+                    this._setupControls();
+                    if('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
+                    // فحص فوري بعد التحميل
+                    setTimeout(() => this.checkTime(), 1000);
+                },
+                _setupControls(){
+                    const btn = document.getElementById('adhanPlayBtn');
+                    if(!btn) return;
+                    btn.addEventListener('click', ()=>{ this._isPlaying ? this.pause() : this.play(); });
+                    this._audio.addEventListener('ended', ()=>{ this._isPlaying = false; this._updateUI(false); State.set('adhan.isPlaying', false); });
+                },
+                play(){
+                    if(!this._audio) return;
+                    this._audio.currentTime = 0;
+                    this._audio.play().then(()=>{ this._isPlaying = true; this._updateUI(true); State.set('adhan.isPlaying', true); }).catch(()=>{});
+                },
+                pause(){
+                    if(!this._audio) return;
+                    this._audio.pause(); this._isPlaying = false; this._updateUI(false); State.set('adhan.isPlaying', false);
+                },
+                _updateUI(p){
+                    const pi = document.getElementById('playIcon'), pai = document.getElementById('pauseIcon');
+                    if(pi && pai){ pi.style.display = p ? 'none' : 'block'; pai.style.display = p ? 'block' : 'none'; }
+                },
+                triggerAutoAdhan(pn, pk){
+                    const now = Date.now();
+                    if(now - this._lastAutoAdhanTime < 30000 || Comm.isAdhanPlayed(pk)) return;
+                    this._lastAutoAdhanTime = now;
+                    this.play();
+                    Comm.setAdhanPlayed(pk);
+                    if('Notification' in window && Notification.permission === 'granted'){
+                        new Notification('🔊 وقت صلاة ' + pn, { body: 'الرفيق يذكرك بالصلاة', icon: '🕌' });
+                    }
+                    if(navigator.vibrate) navigator.vibrate([200,100,200,100,300]);
+                },
+                checkTime(){
+                    const p = State.get().prayer;
+                    if(!p.timings || !p.nextPrayerKey) return;
+                    const now = new Date();
+                    const ns = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+                    for(let i = 0; i < CONFIG.PRAYER_KEYS.length; i++){
+                        const k = CONFIG.PRAYER_KEYS[i];
+                        if(k === 'Sunrise') continue;
+                        const pt = p.timings[k];
+                        if(!pt) continue;
+                        const [h, m] = pt.split(':').map(Number);
+                        const ps = h * 3600 + m * 60;
+                        const diff = ns - ps;
+                        // نافذة 60 ثانية
+                        if(diff >= 0 && diff < 60 && !Comm.isAdhanPlayed(k)){
+                            this.triggerAutoAdhan(CONFIG.PRAYER_NAMES[i], k);
+                            break;
+                        }
+                    }
+                }
             };
 
             const UI = {
@@ -158,21 +233,9 @@
             Logger.log('✅ Rafeeq 10/10 loaded');
         })();
     </script>
-    <!-- استدعاء الأيقونات بعد تحميل DOM بالكامل -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            } else {
-                console.warn('Lucide library not loaded');
-            }
-        });
-        // احتياطًا بعد وقت قصير
-        setTimeout(function() {
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
-        }, 500);
+        document.addEventListener('DOMContentLoaded', () => { if (typeof lucide !== 'undefined') lucide.createIcons(); });
+        setTimeout(() => { if (typeof lucide !== 'undefined') lucide.createIcons(); }, 500);
     </script>
 </body>
 </html>
