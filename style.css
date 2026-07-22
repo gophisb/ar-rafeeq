@@ -1,319 +1,219 @@
-/* style.css — الرفيق
-   الأنماط المشتركة عبر كل صفحات التطبيق (الألوان، القواعد الأساسية، العناصر المتكررة)
-   أي تعديل هنا ينعكس تلقائياً على كل الصفحات دون الحاجة لتعديل كل ملف على حدة */
+
+/* ============================================================
+   الرفيق — الأنماط الأساسية
+   ============================================================ */
 
 :root {
-  --bg: #080B10;
-  --card: rgba(255, 255, 255, 0.04);
-  --emerald: #0F5C3E;
-  --emerald-light: #1E8A5E;
-  --gold: #D4AF37;
-  --gold-soft: #E9C767;
-  --text: #F1EFE9;
-  --muted: #8892A0;
-  --border: rgba(212, 175, 55, 0.18);
-  --radius: 24px;
+    --primary: #1a2332;
+    --secondary: #2c3e50;
+    --gold: #c9a84c;
+    --gold-light: #e8d5a3;
+    --bg: #f5f0e8;
+    --card: #ffffff;
+    --text: #1a2332;
+    --muted: #4a5568;
+    --border: #d1c9b8;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    --radius: 16px;
+    --font-arabic: 'Lateef', 'Amiri', serif;
+    --font-quran: 'Amiri', serif;
+}
+
+[data-theme="dark"] {
+    --bg: #0d1117;
+    --card: #161b22;
+    --text: #f0f6fc;
+    --muted: #8b949e;
+    --border: #30363d;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-  font-family: 'Tajawal', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.8;
-  min-height: 100dvh;
+    font-family: var(--font-arabic);
+    background: var(--bg);
+    color: var(--text);
+    transition: background 0.3s, color 0.3s;
+    min-height: 100vh;
+    line-height: 1.7;
 }
 
-.container {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 16px;
-}
+/* ============================================================
+   الهيدر
+   ============================================================ */
 
-/* === الشريط العلوي المشترك === */
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 0;
-}
-
-.topbar .back {
-  color: var(--gold);
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 600;
-  transition: 0.2s;
-}
-
-.topbar .back:hover {
-  color: var(--gold-soft);
-}
-
-/* === العناوين === */
-h1 {
-  text-align: center;
-  font-size: 26px;
-  color: var(--gold-soft);
-  margin: 6px 0 2px;
-}
-
-.sub {
-  text-align: center;
-  color: var(--muted);
-  font-size: 14px;
-  margin-bottom: 18px;
-}
-
-/* === صندوق البحث === */
-.search-box {
-  position: relative;
-  margin-bottom: 16px;
-}
-
-.search-box input {
-  width: 100%;
-  padding: 13px 44px 13px 16px;
-  border-radius: 14px;
-  border: 1px solid var(--border);
-  background: var(--card);
-  backdrop-filter: blur(12px);
-  font-size: 15px;
-  font-family: inherit;
-  color: var(--text);
-  transition: 0.2s;
-}
-
-.search-box input::placeholder {
-  color: var(--muted);
-}
-
-.search-box input:focus {
-  outline: 2px solid var(--gold);
-  border-color: transparent;
-}
-
-.search-box .ic {
-  position: absolute;
-  right: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--muted);
-}
-
-.result-count {
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 14px;
-}
-
-/* === بطاقات عامة === */
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
-  backdrop-filter: blur(8px);
-  margin-bottom: 16px;
-}
-
-/* === حالة التحميل === */
-#status {
-  text-align: center;
-  color: var(--muted);
-  padding: 30px 0;
-}
-
-/* === التذييل === */
-footer {
-  text-align: center;
-  padding: 24px 0 10px;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.7;
-  border-top: 1px solid var(--border);
-  margin-top: 20px;
-}
-
-/* === استجابة للشاشات الصغيرة === */
-@media (max-width: 600px) {
-  .container {
-    padding: 12px;
-  }
-  h1 {
-    font-size: 22px;
-  }
-  .topbar {
-    padding: 10px 0;
-  }
-}/* ===== أنماط الصفحة الرئيسية الجديدة (الرفيق) ===== */
-.phone-frame {
-    max-width: 400px;
-    width: 100%;
-    margin: 0 auto;
-    background: linear-gradient(145deg, #0f3b22, #062012);
-    border-radius: 40px;
-    padding: 24px 20px 10px 20px;
-    box-shadow: 0 25px 50px rgba(0,0,0,0.7);
-    color: #fff;
-    font-family: 'Tajawal', sans-serif;
-}
-.phone-frame .app-title {
-    font-size: 28px;
-    font-weight: 900;
-    text-align: center;
-    letter-spacing: 2px;
-}
-.phone-frame .app-sub {
-    text-align: center;
-    font-size: 14px;
-    color: #a3d8b0;
-    margin-top: -2px;
-    margin-bottom: 12px;
-}
-.phone-frame .location-date {
+.app-header {
+    background: var(--primary);
+    color: white;
+    padding: 16px 24px;
     display: flex;
     justify-content: space-between;
-    font-size: 13px;
-    color: #b6e0c4;
-    background: rgba(255,255,255,0.08);
-    padding: 8px 16px;
-    border-radius: 30px;
-    margin-bottom: 20px;
-}
-.phone-frame .prayer-card {
-    background: #ffffff;
-    border-radius: 30px;
-    padding: 20px;
-    color: #1e3b2a;
-    text-align: center;
-    margin-bottom: 20px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    display: block;
-    text-decoration: none;
-}
-.phone-frame .prayer-label {
-    font-size: 16px;
-    font-weight: 700;
-    color: #4a7c5f;
-}
-.phone-frame .prayer-name {
-    font-size: 48px;
-    font-weight: 900;
-    color: #0f3b22;
-    line-height: 1.1;
-}
-.phone-frame .prayer-time {
-    font-size: 36px;
-    font-weight: 900;
-    color: #0f3b22;
-    letter-spacing: 3px;
-}
-.phone-frame .prayer-remaining {
-    background: #eef6f1;
-    border-radius: 50px;
-    padding: 8px 16px;
-    display: inline-block;
-    margin-top: 6px;
-    font-size: 14px;
-    font-weight: 700;
-    color: #1e5a37;
-}
-.phone-frame .prayer-remaining span {
-    background: #0f3b22;
-    color: #fff;
-    padding: 2px 12px;
-    border-radius: 30px;
-    margin-right: 6px;
-}
-.phone-frame .adhan-btn {
-    background: #1e5a37;
-    color: #fff;
-    padding: 12px;
-    border-radius: 60px;
-    text-align: center;
-    font-weight: 700;
-    font-size: 18px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 0 #0a2e1a;
-    display: block;
-    text-decoration: none;
-}
-.phone-frame .adhan-btn small {
-    font-weight: 400;
-    font-size: 14px;
-    color: #b6e0c4;
-    display: block;
-}
-.phone-frame .features-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    flex-wrap: wrap;
     gap: 12px;
-    margin-bottom: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
 }
-.phone-frame .feature-item {
-    background: rgba(255,255,255,0.07);
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 20px;
-    padding: 16px 8px;
-    text-align: center;
+
+.app-header h1 {
+    font-family: var(--font-quran);
+    font-size: 1.6rem;
+    color: var(--gold);
+}
+
+.header-nav {
+    display: flex;
+    gap: 15px;
+}
+
+.header-nav a {
+    color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
-    color: #fff;
-    display: block;
+    font-size: 0.95rem;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: 0.3s;
 }
-.phone-frame .feature-item .title {
-    font-weight: 900;
-    font-size: 16px;
-    color: #fff;
+
+.header-nav a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
 }
-.phone-frame .feature-item .desc {
-    font-size: 12px;
-    color: #a3d8b0;
-    margin-top: 4px;
+
+/* ============================================================
+   المحتوى الرئيسي
+   ============================================================ */
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 16px;
 }
-.phone-frame .quick-tabs {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 24px;
-}
-.phone-frame .quick-tab {
-    background: rgba(255,255,255,0.05);
-    border-radius: 30px;
-    padding: 8px 4px;
+
+.hero {
     text-align: center;
-    font-size: 14px;
-    font-weight: 700;
-    color: #cbe8d5;
-    border: 1px solid rgba(255,255,255,0.05);
+    padding: 30px 10px;
 }
-.phone-frame .bottom-nav {
+
+.hero h2 {
+    font-size: 1.8rem;
+    color: var(--gold);
+    font-family: var(--font-quran);
+}
+
+.hero p {
+    color: var(--muted);
+    font-size: 1.1rem;
+}
+
+/* ============================================================
+   البطاقات
+   ============================================================ */
+
+.cards-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    gap: 4px;
-    background: rgba(0,0,0,0.3);
-    border-radius: 60px;
-    padding: 8px 6px;
-    margin-top: 8px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
 }
-.phone-frame .nav-item {
-    text-align: center;
-    font-size: 13px;
-    font-weight: 700;
-    color: #8cb89a;
-    padding: 6px 0;
-    border-radius: 40px;
+
+.card-link {
     text-decoration: none;
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 18px;
+    text-align: center;
+    transition: 0.3s;
+    box-shadow: var(--shadow);
+    color: var(--text);
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.card-icon {
+    font-size: 2.5rem;
     display: block;
+    margin-bottom: 10px;
 }
-.phone-frame .nav-item.active {
-    background: #1e5a37;
-    color: #fff;
+
+.card h3 {
+    color: var(--gold);
+    font-size: 1.2rem;
+    margin-bottom: 8px;
 }
-/* انتهاء أنماط الصفحة الرئيسية */
+
+.card p {
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
+/* ============================================================
+   الفوتر
+   ============================================================ */
+
+.app-footer {
+    background: var(--primary);
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    font-size: 0.9rem;
+}
+
+/* ============================================================
+   زر تبديل الوضع المظلم (يضاف بواسطة app.js)
+   ============================================================ */
+
+.theme-toggle {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+/* ============================================================
+   استجابة للشاشات الصغيرة
+   ============================================================ */
+
+@media (max-width: 600px) {
+    .app-header {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+
+    .header-nav {
+        justify-content: center;
+    }
+
+    .cards-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 400px) {
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .app-header h1 {
+        font-size: 1.3rem;
+    }
+}
